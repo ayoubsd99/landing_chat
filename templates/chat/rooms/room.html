@@ -1,0 +1,102 @@
+{% extends 'chat/base/index.html' %}
+
+{% block css %}
+<style>
+    .messages-content{
+        padding:15px;border: 1px solid #000;height: 500px; overflow-y: scroll;
+    }
+</style>
+  
+    
+{% endblock %}
+
+{% block content %}
+
+<section>
+<div class="container row">
+<div class="col-sm-3">
+    <ul class="list-unstyled" style="text-align:center;">
+        <li><dt> Admin</dt></li>
+        <li>{{admin.prof.getfull_name}}--{{admin.user_permission}}</li>
+        <li><dt>Other Members</dt></li>
+        <ul class="list-unstyled" style="text-align:center;">
+            {% for m in members %}
+            <li>{{m.prof.getfull_name}}--{{m.user_permission}}</li>
+            {% endfor %}
+        </ul>
+    </ul>
+</div>
+<div class="col-sm-9">
+<div id='chat-messages' class="row messages-content">
+   <div style="text-align: end;background:cyan;">
+    <img src="" alt="user-image">
+    <label for="">username</label>
+    <p>message content</p>
+    </div>
+   <div  style="background:darkgray;">
+    <img src="" alt="user-image">
+    <label for="">username</label>
+    <p>message content</p>
+   </div>
+</div>
+<div>
+    <form class="" enctype="multipart/form-data">
+        <div class="form-group">
+            <textarea class="form-control" rows="5" id="content"></textarea>
+        </div>
+        <div class="form-group">
+          <input type="file" class="form-control" id="file-message">
+        </div>
+        <button type="submit" id='send-message' class="btn btn-default">Submit</button>
+      </form>
+</div>
+</div>
+
+</div>
+<input id='room-name' type="text" value="{{room_name}}" hidden>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const roomName =document.getElementById('room-name').value;
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/chat/'
+        + roomName
+        + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat-messages').value += (data.message + '\n');
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#content').focus();
+    document.querySelector('#content').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#send-message').onclick = function(e) {
+        const messageInputDom = document.querySelector('#content');
+        const  file = document.querySelector("#file-message").files[0] 
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'file':file
+        }));
+        messageInputDom.value = '';
+        file.value = ''
+    };
+</script>
+    
+{% endblock %}

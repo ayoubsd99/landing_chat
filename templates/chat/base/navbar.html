@@ -1,0 +1,30 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">WebSiteName</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="{% url 'home' %}">Home</a></li>
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Rooms
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          {% if request.user.is_superuser == True %}
+          {% for room in rooms %}
+          <li><a href="{% url 'room' room.room_name %}">{{room.room_name}}</a></li>
+          {% endfor %}
+          {% else %}
+          <li><a href="{% url 'room' rooms.room_name %}">{{rooms.room_name}}</a></li>
+          {% endif %}
+        </ul>
+      </li>
+      <li><a href="#">Primes</a></li>
+      <li><a href="#">Signales</a></li>
+      <li><a href="#">Meeting</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+    </ul>
+  </div>
+ 
+</nav>

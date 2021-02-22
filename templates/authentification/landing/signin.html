@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <style >
+            body{
+                background:#e8eaf6;
+            }
+            .sigin-cont{
+                height:auto; margin: 0 auto; text-align:center;
+            }
+            .btn-signin{
+                text-align:center;
+            }
+            form{
+
+                width:50%; 
+                margin:100px auto;
+            }
+        </style>
+
+    <title>Document</title>
+</head>
+<body>
+   
+        <div class="container sigin-cont">
+            <form class="col s8" method="post">{% csrf_token %}
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="email" type="text" name="username" required class="validate">
+                  <label for="email">username</label>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="password" name="password" type="password" required class="validate">
+                  <label for="email">password</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12 btn-signin">
+                  <input type="submit" class='btn blue lighten-2'>
+                </div>
+              </div>
+            </form>
+          </div>
+   
+
+         <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+          
+  
+</body>
+</html>

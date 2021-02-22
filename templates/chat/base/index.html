@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'scripts/links.html' %}
+  
+    <title>Document</title>
+    {% block css %}
+    
+    
+    {% endblock %}
+</head>
+<body>
+
+    {% include 'chat/base/navbar.html' %}
+
+    {% block content %}
+    
+    
+    {% endblock %}
+    
+    {% block scripts %}
+    
+    
+    {% endblock %}
+   {% include 'scripts/scripts.html' %}
+   
+</body>
+</html>
