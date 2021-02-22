@@ -1,68 +1,172 @@
 {% extends 'chat/base/index.html' %}
+{% load static %}
 
 {% block css %}
-<style>
-    .messages-content{
-        padding:15px;border: 1px solid #000;height: 500px; overflow-y: scroll;
-    }
-</style>
-  
-    
+<link rel="stylesheet" href="{% static 'chat/css/room.css' %}">
 {% endblock %}
 
 {% block content %}
-
-<section>
-<div class="container row">
-<div class="col-sm-3">
-    <ul class="list-unstyled" style="text-align:center;">
-        <li><dt> Admin</dt></li>
-        <li>{{admin.prof.getfull_name}}--{{admin.user_permission}}</li>
-        <li><dt>Other Members</dt></li>
-        <ul class="list-unstyled" style="text-align:center;">
-            {% for m in members %}
-            <li>{{m.prof.getfull_name}}--{{m.user_permission}}</li>
-            {% endfor %}
-        </ul>
-    </ul>
-</div>
-<div class="col-sm-9">
-<div id='chat-messages' class="row messages-content">
-   <div style="text-align: end;background:cyan;">
-    <img src="" alt="user-image">
-    <label for="">username</label>
-    <p>message content</p>
-    </div>
-   <div  style="background:darkgray;">
-    <img src="" alt="user-image">
-    <label for="">username</label>
-    <p>message content</p>
-   </div>
-</div>
-<div>
-    <form class="" enctype="multipart/form-data">
-        <div class="form-group">
-            <textarea class="form-control" rows="5" id="content"></textarea>
-        </div>
-        <div class="form-group">
-          <input type="file" class="form-control" id="file-message">
-        </div>
-        <button type="submit" id='send-message' class="btn btn-default">Submit</button>
-      </form>
-</div>
-</div>
-
-</div>
+<div id="frame">
+	<div id="sidepanel">
+		<div id="profile">
+			<div class="wrap">
+				<img id="profile-img" src="{{request.user.prof.miniature}}" class="online" alt="" />
+				<p>{{request.user.prof.getfull_name}}</p>
+				<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
+				<div id="status-options">
+					<ul>
+						<li id="status-online" class="active"><span class="status-circle"></span> <p>Online</p></li>
+						<li id="status-away"><span class="status-circle"></span> <p>Away</p></li>
+						<li id="status-busy"><span class="status-circle"></span> <p>Busy</p></li>
+						<li id="status-offline"><span class="status-circle"></span> <p>Offline</p></li>
+					</ul>
+				</div>
+				<div id="expanded">
+					<label for="twitter"><i class="fa fa-facebook fa-fw" aria-hidden="true"></i></label>
+					<input name="twitter" type="text" value="mikeross" />
+					<label for="twitter"><i class="fa fa-twitter fa-fw" aria-hidden="true"></i></label>
+					<input name="twitter" type="text" value="ross81" />
+					<label for="twitter"><i class="fa fa-instagram fa-fw" aria-hidden="true"></i></label>
+					<input name="twitter" type="text" value="mike.ross" />
+				</div>
+			</div>
+		</div>
+		<div id="search">
+			<label for="">Members</label>
+		</div><br><hr>
+		<div id="contacts">
+			<ul>
+				<li class="contact">
+					<div class="wrap">
+						<span class="contact-status online"></span>
+						<img src="{{admin.prof.miniature}}" alt="" />
+						<div class="meta">
+							<p class="name">{{admin.prof.getfull_name}}</p>
+							<p class="preview">{{admin.user_permission}}</p>
+						</div>
+					</div>
+				</li>
+				{% for m in members %}
+				<li class="contact active">
+					<div class="wrap">
+						<span class="contact-status busy"></span>
+						<img src="{{m.prof.miniature}}" alt="" />
+						<div class="meta">
+							<p class="name">{{m.prof.getfull_name}}</p>
+							<p class="preview">{{m.user_permission}}</p>
+						</div>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+	<div class="content">
+		<div class="contact-profile">
+			<img src="{{request.user.prof.miniature}}" alt="" />
+			<p>{{room_name}}</p>
+			<div class="social-media">
+				<i class="fa fa-facebook" aria-hidden="true"></i>
+				<i class="fa fa-twitter" aria-hidden="true"></i>
+				 <i class="fa fa-instagram" aria-hidden="true"></i>
+			</div>
+		</div>
+		<div class="messages">
+			<ul>
+				<li class="sent">
+					<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+					<p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
+				</li>
+				<li class="replies">
+					<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
+					<p>When you're backed against the wall, break the god damn thing down.</p>
+				</li>
+				<li class="sent">
+					<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
+					<p>Oh yeah, did Michael Jordan tell you that?</p>
+				</li>
+			</ul>
+		</div>
+		<div class="message-input">
+			<div class="wrap">
+			<input type="text" id="content" placeholder="Write your message..." />
+			<input type="file" id="file-message">
+			<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+			<button class="submit" id='send_btn'><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+			</div>
+		</div>
+	</div>
 <input id='room-name' type="text" value="{{room_name}}" hidden>
-</section>
 
+</div>
 {% endblock %}
-
 {% block scripts %}
-<script>
+<script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script><script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script >
+$(".messages").animate({ scrollTop: $(document).height() }, "fast");
+
+$("#profile-img").click(function() {
+	$("#status-options").toggleClass("active");
+});
+
+$(".expand-button").click(function() {
+  $("#profile").toggleClass("expanded");
+	$("#contacts").toggleClass("expanded");
+});
+
+$("#status-options ul li").click(function() {
+	$("#profile-img").removeClass();
+	$("#status-online").removeClass("active");
+	$("#status-away").removeClass("active");
+	$("#status-busy").removeClass("active");
+	$("#status-offline").removeClass("active");
+	$(this).addClass("active");
+	
+	if($("#status-online").hasClass("active")) {
+		$("#profile-img").addClass("online");
+	} else if ($("#status-away").hasClass("active")) {
+		$("#profile-img").addClass("away");
+	} else if ($("#status-busy").hasClass("active")) {
+		$("#profile-img").addClass("busy");
+	} else if ($("#status-offline").hasClass("active")) {
+		$("#profile-img").addClass("offline");
+	} else {
+		$("#profile-img").removeClass();
+	};
+	
+	$("#status-options").removeClass("active");
+});
+
+function newMessage() {
+	message = $(".message-input input").val();
+	if($.trim(message) == '') {
+		return false;
+	}
+	$('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+	$('.message-input input').val(null);
+	$('.contact.active .preview').html('<span>You: </span>' + message);
+	$(".messages").animate({ scrollTop: $(document).height() }, "fast");
+};
+
+$('#send_btn').click(function() {
+  newMessage();
+});
+
+$(window).on('keydown', function(e) {
+  if (e.which == 13) {
+    newMessage();
+    return false;
+  }
+});
+
+
+$(document).ready(()=>{
+	console.log('hhhhhhh')
     const roomName =document.getElementById('room-name').value;
 
-    const chatSocket = new WebSocket(
+
+	const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
         + '/ws/chat/'
@@ -70,7 +174,7 @@
         + '/'
     );
 
-    chatSocket.onmessage = function(e) {
+	chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
         document.querySelector('#chat-messages').value += (data.message + '\n');
     };
@@ -86,7 +190,7 @@
         }
     };
 
-    document.querySelector('#send-message').onclick = function(e) {
+    $('#send_btn').on('click',(e)=> {
         const messageInputDom = document.querySelector('#content');
         const  file = document.querySelector("#file-message").files[0] 
         const message = messageInputDom.value;
@@ -96,7 +200,9 @@
         }));
         messageInputDom.value = '';
         file.value = ''
-    };
+    });
+})
+//# sourceURL=pen.js
 </script>
-    
+
 {% endblock %}

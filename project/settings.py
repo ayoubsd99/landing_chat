@@ -44,7 +44,7 @@ INSTALLED_APPS +=[
     'users.apps.UsersConfig',
     'chat.apps.ChatConfig',
      'django_extensions',
-     'channels',
+     #'channels',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +128,8 @@ ASGI_APPLICATION = 'mysite.asgi.application'
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    '/var/www/static/',
+]
